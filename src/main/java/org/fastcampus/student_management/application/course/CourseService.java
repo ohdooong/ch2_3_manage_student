@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.fastcampus.student_management.application.course.dto.CourseInfoDto;
 import org.fastcampus.student_management.application.student.StudentService;
 import org.fastcampus.student_management.domain.Course;
+import org.fastcampus.student_management.domain.CourseList;
 import org.fastcampus.student_management.domain.DayOfWeek;
 import org.fastcampus.student_management.domain.Student;
 import org.fastcampus.student_management.repo.CourseRepository;
@@ -21,7 +22,8 @@ public class CourseService {
 
   public void registerCourse(CourseInfoDto courseInfoDto) {
     Student student = studentService.getStudent(courseInfoDto.getStudentName());
-    Course course = new Course(student, courseInfoDto.getCourseName(), courseInfoDto.getFee(), courseInfoDto.getDayOfWeek(), courseInfoDto.getCourseTime());
+    Course course = new Course(student, courseInfoDto.getCourseName(), courseInfoDto.getFee(),
+        courseInfoDto.getDayOfWeek(), courseInfoDto.getCourseTime());
     courseRepository.save(course);
   }
 
@@ -36,11 +38,9 @@ public class CourseService {
 
   public void changeFee(String studentName, int fee) {
     // TODO: 과제 구현 부분
+    // 일급객체로 리팩토링
     List<Course> courses = new ArrayList<>();
-    List<Course> courseListByStudent = courseRepository.getCourseListByStudent(studentName);
-    for (Course course : courseListByStudent) {
-      courses.add(course.changeFee(fee));
-    }
-    courseRepository.saveCourses(courses);
+    CourseList courseList = new CourseList(courses);
+    courseList.changeAllCoursesFee(fee);
   }
 }
