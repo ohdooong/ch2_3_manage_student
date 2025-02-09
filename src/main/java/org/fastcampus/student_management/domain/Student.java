@@ -32,4 +32,7 @@ public class Student {
   public boolean isActivate() {
     return activated;
   }
+  public void setActivate(boolean activated) {
+    this.activated = activated;
+  }
 }
